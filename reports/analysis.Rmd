@@ -1,0 +1,29 @@
+---
+title: Analysis
+date: "19/02/2019"
+output: html_document
+params:
+    datafile: "../output/iris_mod.rds"
+    outputpath: "../output"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+df_iris <- readRDS(params$datafile)
+```
+
+
+
+## Perform an analysis
+
+```{r}
+fit <- lm(Petal.Width ~ Species, data = df_iris)
+summary(fit)
+```
+
+Species does matter ;)
+
+```{r session-info}
+sessionInfo()
+```

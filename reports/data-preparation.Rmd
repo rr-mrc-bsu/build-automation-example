@@ -1,0 +1,68 @@
+---
+title: "Data Preparation"
+date: "19/02/2019"
+output: html_document
+params:
+    datafile: "../output/iris.rds"
+    outputpath: "../output"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+df_iris <- readRDS(params$datafile)
+```
+
+
+
+## Data preparation
+
+The loaded data set is the standard `iris` data set converted to a `tibble`:
+
+```{r print-head}
+df_iris
+```
+
+We change the `Species` variable to a factor:
+
+```{r make-factor}
+df_iris$Species <- factor(df_iris$Species)
+```
+
+... and plot the petal width by species
+
+```{r boxplot}
+ggplot(df_iris, aes(Species, Petal.Width)) +
+    geom_boxplot()
+```
+
+Since the figure might be needed in a publication, it is good practice
+to save it separately:
+
+```{r save-figure}
+ggsave("boxplot.png", dpi = 1200, width = 8, height = 5)
+ggsave("boxplot.pdf", width = 8, height = 5)
+```
+
+Note that the export format / device size might be different from the one
+used for the report!
+
+Save the modified data set back to disk:
+```{r save-data}
+saveRDS(df_iris, sprintf("%s/iris_mod.rds", params$outputpath))
+```
+
+In case of multiple figures, it might be worthwhile zipping them:
+
+```{r zip-figures}
+figures <- list.files(pattern = "*.(pdf)|(png)$")
+zip("figures.zip", files = figures)
+unlink(figures)
+file.rename("figures.zip", sprintf("%s/figures.zip", params$outputpath))
+```
+
+It is also good practice to always print a session info at the end of a report.
+
+```{r session-info}
+sessionInfo()
+```
